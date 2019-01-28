@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple template</title>
+    </head>
+    <body>
+        
+    </body>
+    <script>
+        // var memory = new WebAssembly.Memory({initial: 10, maximum: 100});
+        // new Uint32Array(memory.buffer)[0] = 42;
+        // console.log(new Uint32Array(memory.buffer)[0]);
+        function consoleLogString(offset, length) {
+            var bytes = new Uint8Array(memory.buffer, offset, length);
+            var string = new TextDecoder('utf8').decode(bytes);
+            console.log(string);
+        }
+        var memory = new WebAssembly.Memory({initial: 1});
+        var importObj = {
+            console: {
+                log: consoleLogString
+            },
+            js: {
+                mem: memory
+            }
+        }
+        WebAssembly
+            .instantiateStreaming(fetch("./memory.wasm"), importObj)
+            .then(obj => {
+                obj.instance.exports.writeHi();
+            });
+    </script>
+</html>

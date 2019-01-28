@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple template</title>
+    </head>
+    <body>
+        
+    </body>
+    <script>
+        var importObject = {
+            imports: {
+                imported_func: function(arg) {
+                    console.log(arg);
+                }
+            }
+        };
+        fetch('./simple.wasm').then(res => {
+            return res.arrayBuffer();
+        }).then(bytes => {
+            return WebAssembly.instantiate(bytes, importObject);
+        }).then(results => {
+            results.instance.exports.exported_func();
+        });
+    </script>
+</html>
